@@ -1,12 +1,16 @@
 org 0
 bits 16
 
-; bpb (bios parameter block)
+; FAT Boot Record
+; BPB (BIOS Parameter Block)
+; https://wiki.osdev.org/FAT#BPB_.28BIOS_Parameter_Block.29
+; https://wiki.osdev.org/FAT#Extended_Boot_Record
 bpb:
 	jmp short setup1
 	nop
-; just reserve space, as some BIOSes may change this area
-times 33 db 0
+; reserve space as some BIOSes may change this area
+; 62 is the size of BPB + FAT 16 EBPB (Extended Boot Record)
+times 62-($ - $$) db 0
 
 ; BIOS historically loads the bootloader to 0x7c00 memory address (20 bits)
 ; cs:offset is translated to ((cs << 4) + offset) address
